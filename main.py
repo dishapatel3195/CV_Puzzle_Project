@@ -1,7 +1,7 @@
 import os
 import cv2
 from edges import preprocess, get_edges_and_contours, generate_candidate_pairs
-from matching import match_pieces, assemble
+from matches import match_pieces, assemble
 
 def load_pieces(folder):
     pieces = []

@@ -1,24 +1,110 @@
-import cv2
 import numpy as np
-from sklearn.decomposition import PCA
-from itertools import combinations
+
+
+class PCA:
+    def __init__(self, n_components):
+        self.n_components = n_components
+        self.mean_ = None
+        self.components_ = None
+        self.explained_variance_ = None
+
+    def fit(self, X):
+        X = np.asarray(X, dtype=np.float64)
+        if X.ndim != 2 or X.shape[0] == 0:
+            raise ValueError("X must be a non-empty 2D array")
+
+        self.mean_ = X.mean(axis=0)
+        X_centered = X - self.mean_
+
+        # SVD-based PCA: X_centered = U S Vt
+        _, singular_vals, vt = np.linalg.svd(X_centered, full_matrices=False)
+
+        self.components_ = vt[: self.n_components]
+        n_samples = X.shape[0]
+        denom = max(n_samples - 1, 1)
+        self.explained_variance_ = (singular_vals[: self.n_components] ** 2) / denom
+        return self
+
+    def transform(self, X):
+        if self.mean_ is None or self.components_ is None:
+            raise ValueError("PCA must be fitted before transform")
+
+        X = np.asarray(X, dtype=np.float64)
+        X_centered = X - self.mean_
+        return X_centered @ self.components_.T
+
+    def fit_transform(self, X):
+        self.fit(X)
+        return self.transform(X)
 
 # --- PCA ---
 def apply_pca(features, n_components=10):
+    features = np.asarray(features)
+
+    if features.ndim != 2 or features.shape[0] == 0:
+        raise ValueError("features must be a non-empty 2D array")
+
+    max_components = min(features.shape[0], features.shape[1])
+    n_components = max(1, min(n_components, max_components))
+
     pca = PCA(n_components=n_components)
+    reduced = pca.fit_transform(features)
     reduced = pca.fit_transform(features)
     return reduced, pca
 
 # --- Texture Matching ---
+def _to_grayscale(img):
+    if img.ndim == 2:
+        return img.astype(np.float32)
+    if img.ndim == 3:
+        if img.shape[2] >= 3:
+            b = img[..., 0].astype(np.float32)
+            g = img[..., 1].astype(np.float32)
+            r = img[..., 2].astype(np.float32)
+            return 0.114 * b + 0.587 * g + 0.299 * r
+        return img[..., 0].astype(np.float32)
+    raise ValueError("Unsupported image shape")
+
+
+def _resize_nn(img, h, w):
+    if img.shape[0] == h and img.shape[1] == w:
+        return img
+    y_idx = np.linspace(0, img.shape[0] - 1, h).astype(np.int64)
+    x_idx = np.linspace(0, img.shape[1] - 1, w).astype(np.int64)
+    return img[np.ix_(y_idx, x_idx)]
+
+
+def _normalized_correlation(i1, i2):
+    a = i1.astype(np.float32).ravel()
+    b = i2.astype(np.float32).ravel()
+    a -= a.mean()
+    b -= b.mean()
+    denom = np.linalg.norm(a) * np.linalg.norm(b)
+    if denom == 0:
+        return -1.0
+    return float(np.dot(a, b) / denom)
+
+
 def match_texture(img1, img2):
+    if img1 is None or img2 is None:
+        return -1.0
+
+    if img1.size == 0 or img2.size == 0:
+        return -1.0
+
+    img1 = _to_grayscale(img1)
+    img2 = _to_grayscale(img2)
+
     h = min(img1.shape[0], img2.shape[0])
     w = min(img1.shape[1], img2.shape[1])
+
+    if h < 3 or w < 3:
+        return -1.0
     
-    i1 = cv2.resize(img1, (w,h))
-    i2 = cv2.resize(img2, (w,h))
-    
-    result = cv2.matchTemplate(i1, i2, cv2.TM_CCOEFF_NORMED)
-    return np.max(result)
+    i1 = _resize_nn(img1, h, w)
+    i2 = _resize_nn(img2, h, w)
+
+    return _normalized_correlation(i1, i2)
 
 # --- Rotations ---
 def generate_rotations(img):
@@ -27,8 +113,20 @@ def generate_rotations(img):
 # --- Match Pieces ---
 def match_pieces(pieces, candidate_pairs):
     matches = []
+    seen_pairs = set()
     
     for i, j in candidate_pairs:
+        if i == j:
+            continue
+
+        if i < 0 or j < 0 or i >= len(pieces) or j >= len(pieces):
+            continue
+
+        pair = tuple(sorted((i, j)))
+        if pair in seen_pairs:
+            continue
+        seen_pairs.add(pair)
+
         best_score = -1
         
         for r1 in generate_rotations(pieces[i]):
@@ -58,5 +156,12 @@ def assemble(matches):
 
 # --- Reconstruction Accuracy ---
 def reconstruction_accuracy(pred_positions, gt_positions):
-    correct = sum([1 for i in pred_positions if pred_positions[i] == gt_positions[i]])
+    if not gt_positions:
+        return 0.0
+
+    correct = sum(
+        1
+        for i in gt_positions
+        if i in pred_positions and pred_positions[i] == gt_positions[i]
+    )
     return correct / len(gt_positions)
