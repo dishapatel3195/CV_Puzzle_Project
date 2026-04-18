@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 
@@ -39,7 +40,7 @@ class PCA:
 
 # --- PCA ---
 def apply_pca(features, n_components=10):
-    features = np.asarray(features)
+    features = np.asarray(features, dtype=np.float64)
 
     if features.ndim != 2 or features.shape[0] == 0:
         raise ValueError("features must be a non-empty 2D array")
@@ -48,7 +49,6 @@ def apply_pca(features, n_components=10):
     n_components = max(1, min(n_components, max_components))
 
     pca = PCA(n_components=n_components)
-    reduced = pca.fit_transform(features)
     reduced = pca.fit_transform(features)
     return reduced, pca
 
@@ -92,19 +92,40 @@ def match_texture(img1, img2):
     if img1.size == 0 or img2.size == 0:
         return -1.0
 
-    img1 = _to_grayscale(img1)
-    img2 = _to_grayscale(img2)
+    gray1 = _to_grayscale(img1)
+    gray2 = _to_grayscale(img2)
 
-    h = min(img1.shape[0], img2.shape[0])
-    w = min(img1.shape[1], img2.shape[1])
+    h = min(gray1.shape[0], gray2.shape[0])
+    w = min(gray1.shape[1], gray2.shape[1])
 
     if h < 3 or w < 3:
         return -1.0
     
-    i1 = _resize_nn(img1, h, w)
-    i2 = _resize_nn(img2, h, w)
+    i1 = _resize_nn(gray1, h, w)
+    i2 = _resize_nn(gray2, h, w)
 
-    return _normalized_correlation(i1, i2)
+    # Template matching (NCC)
+    ncc = float(np.max(cv2.matchTemplate(i1.astype(np.float32), i2.astype(np.float32), cv2.TM_CCOEFF_NORMED)))
+
+    # Normalized correlation
+    corr = _normalized_correlation(i1, i2)
+
+    # Color consistency (mean absolute channel difference)
+    if img1.ndim == 2:
+        c1 = cv2.cvtColor(img1.astype(np.uint8), cv2.COLOR_GRAY2BGR)
+    else:
+        c1 = img1
+    if img2.ndim == 2:
+        c2 = cv2.cvtColor(img2.astype(np.uint8), cv2.COLOR_GRAY2BGR)
+    else:
+        c2 = img2
+
+    c1 = cv2.resize(c1, (w, h)).astype(np.float32)
+    c2 = cv2.resize(c2, (w, h)).astype(np.float32)
+    mad = np.mean(np.abs(c1 - c2)) / 255.0
+    color = float(1.0 - np.clip(mad, 0.0, 1.0))
+
+    return 0.55 * ncc + 0.30 * corr + 0.15 * color
 
 # --- Rotations ---
 def generate_rotations(img):
@@ -114,6 +135,23 @@ def generate_rotations(img):
 def match_pieces(pieces, candidate_pairs):
     matches = []
     seen_pairs = set()
+
+    if not pieces:
+        return matches
+
+    # Build PCA-compressed patch features for each piece rotation.
+    feature_index = []
+    feature_vectors = []
+    for i, piece in enumerate(pieces):
+        for r, rot_img in enumerate(generate_rotations(piece)):
+            gray = _to_grayscale(rot_img)
+            blur = cv2.GaussianBlur(gray, (3, 3), 0)
+            patch = cv2.resize(blur, (28, 28)).astype(np.float32).reshape(-1)
+            feature_index.append((i, r))
+            feature_vectors.append(patch)
+
+    reduced_features, _ = apply_pca(np.asarray(feature_vectors, dtype=np.float64), n_components=24)
+    pca_map = {key: reduced_features[idx] for idx, key in enumerate(feature_index)}
     
     for i, j in candidate_pairs:
         if i == j:
@@ -127,17 +165,23 @@ def match_pieces(pieces, candidate_pairs):
             continue
         seen_pairs.add(pair)
 
-        best_score = -1
+        best_score = -1.0
         
-        for r1 in generate_rotations(pieces[i]):
-            for r2 in generate_rotations(pieces[j]):
-                
-                score = match_texture(r1, r2)
+        for ri, r1 in enumerate(generate_rotations(pieces[i])):
+            for rj, r2 in enumerate(generate_rotations(pieces[j])):
+                texture_score = match_texture(r1, r2)
+
+                v1 = pca_map[(i, ri)]
+                v2 = pca_map[(j, rj)]
+                denom = np.linalg.norm(v1) * np.linalg.norm(v2)
+                pca_score = float(np.dot(v1, v2) / denom) if denom != 0 else 0.0
+
+                score = 0.70 * texture_score + 0.30 * pca_score
                 
                 if score > best_score:
                     best_score = score
         
-        matches.append((i, j, best_score))
+        matches.append((i, j, float(best_score)))
     
     return sorted(matches, key=lambda x: -x[2])
 
