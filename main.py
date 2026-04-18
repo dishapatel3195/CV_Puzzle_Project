@@ -3,11 +3,12 @@ import cv2
 from edges import preprocess, get_edges_and_contours, generate_candidate_pairs
 from matches import match_pieces, assemble
 
+
 def load_pieces(folder):
     pieces = []
     for file in sorted(os.listdir(folder)):
-        img = cv2.imread(os.path.join(folder, file))
-        pieces.append(img)
+        piece = cv2.imread(os.path.join(folder, file))
+        pieces.append(piece)
     return pieces
 
 def run_pipeline(folder):
@@ -29,6 +30,9 @@ def run_pipeline(folder):
     
     return assembly
 
-if __name__ == "__main__":
-    result = run_pipeline("puzzle_pieces")
-    print(result)
+brutus_output_folder = "brutus_puzzle_pieces"
+brutus_assembly = run_pipeline(brutus_output_folder)
+japan_output_folder = "japan_puzzle_pieces"
+japan_assembly = run_pipeline(japan_output_folder)
+cookies_output_folder = "cookies_puzzle_pieces"
+cookies_assembly = run_pipeline(cookies_output_folder)
