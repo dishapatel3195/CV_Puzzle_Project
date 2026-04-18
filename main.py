@@ -1,28 +1,36 @@
 import os
 import cv2
-from edges import preprocess, get_edges_and_contours, generate_candidate_pairs
-from matching import match_pieces, assemble
-
+from edges import preprocess, edging, approximate_contours, filter_weak_edges, generate_candidate_pairs
+from matches import match_pieces, assemble
 
 def load_pieces(folder):
     pieces = []
+    piece_paths = []
     for file in sorted(os.listdir(folder)):
-        piece = cv2.imread(os.path.join(folder, file))
-        pieces.append(piece)
-    return pieces
+        path = os.path.join(folder, file)
+        if not file.lower().endswith((".png", ".jpg", ".jpeg", ".bmp")):
+            continue
+        img = cv2.imread(path)
+        if img is not None:
+            pieces.append(img)
+            piece_paths.append(path)
+    return pieces, piece_paths
 
 def run_pipeline(folder):
-    pieces = load_pieces(folder)
-    
-    processed = [preprocess(p) for p in pieces]
-    
+    pieces, piece_paths = load_pieces(folder)
+
+    piece_ids = list(range(len(pieces)))
     contours_list = []
-    for img in processed:
-        _, contours = get_edges_and_contours(img)
+    for path in piece_paths:
+        _, blur = preprocess(path)
+        edges, _ = edging(blur)
+        contours = approximate_contours(edges)
+        contours = filter_weak_edges(contours, min_length=10)
         contours_list.append(contours)
     
     # Teammate 1 output
-    candidate_pairs = generate_candidate_pairs(contours_list)
+    candidate_meta = generate_candidate_pairs(contours_list, piece_ids)
+    candidate_pairs = list({tuple(sorted((i, j))) for i, j, *_ in candidate_meta})
     
     # Teammate 2 processing
     matches = match_pieces(pieces, candidate_pairs)
@@ -30,9 +38,6 @@ def run_pipeline(folder):
     
     return assembly
 
-brutus_output_folder = "brutus_puzzle_pieces"
-brutus_assembly = run_pipeline(brutus_output_folder)
-japan_output_folder = "japan_puzzle_pieces"
-japan_assembly = run_pipeline(japan_output_folder)
-cookies_output_folder = "cookies_puzzle_pieces"
-cookies_assembly = run_pipeline(cookies_output_folder)
+if __name__ == "__main__":
+    result = run_pipeline("brutus_puzzle_pieces")
+    print(result)
