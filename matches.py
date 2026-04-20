@@ -1,211 +1,236 @@
-import cv2
 import numpy as np
+from skimage import transform, filters
+from edges import get_edges_from_piece
 
+pca_mean = None
+pca_components = None
 
-class PCA:
-    def __init__(self, n_components):
-        self.n_components = n_components
-        self.mean_ = None
-        self.components_ = None
-        self.explained_variance_ = None
-
-    def fit(self, X):
-        X = np.asarray(X, dtype=np.float64)
-        if X.ndim != 2 or X.shape[0] == 0:
-            raise ValueError("X must be a non-empty 2D array")
-
-        self.mean_ = X.mean(axis=0)
-        X_centered = X - self.mean_
-
-        # SVD-based PCA: X_centered = U S Vt
-        _, singular_vals, vt = np.linalg.svd(X_centered, full_matrices=False)
-
-        self.components_ = vt[: self.n_components]
-        n_samples = X.shape[0]
-        denom = max(n_samples - 1, 1)
-        self.explained_variance_ = (singular_vals[: self.n_components] ** 2) / denom
-        return self
-
-    def transform(self, X):
-        if self.mean_ is None or self.components_ is None:
-            raise ValueError("PCA must be fitted before transform")
-
-        X = np.asarray(X, dtype=np.float64)
-        X_centered = X - self.mean_
-        return X_centered @ self.components_.T
-
-    def fit_transform(self, X):
-        self.fit(X)
-        return self.transform(X)
-
-# --- PCA ---
-def apply_pca(features, n_components=10):
-    features = np.asarray(features, dtype=np.float64)
-
-    if features.ndim != 2 or features.shape[0] == 0:
-        raise ValueError("features must be a non-empty 2D array")
-
-    max_components = min(features.shape[0], features.shape[1])
-    n_components = max(1, min(n_components, max_components))
-
-    pca = PCA(n_components=n_components)
-    reduced = pca.fit_transform(features)
-    return reduced, pca
-
-# --- Texture Matching ---
-def _to_grayscale(img):
-    if img.ndim == 2:
-        return img.astype(np.float32)
-    if img.ndim == 3:
-        if img.shape[2] >= 3:
-            b = img[..., 0].astype(np.float32)
-            g = img[..., 1].astype(np.float32)
-            r = img[..., 2].astype(np.float32)
-            return 0.114 * b + 0.587 * g + 0.299 * r
-        return img[..., 0].astype(np.float32)
-    raise ValueError("Unsupported image shape")
-
-
-def _resize_nn(img, h, w):
-    if img.shape[0] == h and img.shape[1] == w:
-        return img
-    y_idx = np.linspace(0, img.shape[0] - 1, h).astype(np.int64)
-    x_idx = np.linspace(0, img.shape[1] - 1, w).astype(np.int64)
-    return img[np.ix_(y_idx, x_idx)]
-
-
-def _normalized_correlation(i1, i2):
-    a = i1.astype(np.float32).ravel()
-    b = i2.astype(np.float32).ravel()
-    a -= a.mean()
-    b -= b.mean()
-    denom = np.linalg.norm(a) * np.linalg.norm(b)
-    if denom == 0:
-        return -1.0
-    return float(np.dot(a, b) / denom)
-
-
-def match_texture(img1, img2):
-    if img1 is None or img2 is None:
-        return -1.0
-
-    if img1.size == 0 or img2.size == 0:
-        return -1.0
-
-    gray1 = _to_grayscale(img1)
-    gray2 = _to_grayscale(img2)
-
-    h = min(gray1.shape[0], gray2.shape[0])
-    w = min(gray1.shape[1], gray2.shape[1])
-
-    if h < 3 or w < 3:
-        return -1.0
+# trains PCA
+def resize(patches, n_components=16):
+    global pca_mean, pca_components
     
-    i1 = _resize_nn(gray1, h, w)
-    i2 = _resize_nn(gray2, h, w)
+    # Flatten each patch and pad to same size
+    flattened_patches = []
+    for p in patches:
+        flattened = p.ravel().astype(np.float32)
+        flattened_patches.append(flattened)
+    
+    max_size = max(len(p) for p in flattened_patches)
 
-    # Template matching (NCC)
-    ncc = float(np.max(cv2.matchTemplate(i1.astype(np.float32), i2.astype(np.float32), cv2.TM_CCOEFF_NORMED)))
+    # Pad smaller patches with zeros to match max size
+    padded_list = []
+    for p in flattened_patches:
+        padded_patch = np.pad(p, (0, max_size - len(p)))
+        padded_list.append(padded_patch)
+    padded = np.array(padded_list, dtype=np.float32)
+    
+    pca_mean = np.mean(padded, axis=0)
+    X_centered = padded - pca_mean
+    
+    _, _, vt = np.linalg.svd(X_centered, full_matrices=False)
+    pca_components = vt[:min(n_components, len(vt))]
 
-    # Normalized correlation
-    corr = _normalized_correlation(i1, i2)
+# works on sinlge-patch PCA
+def pca_transform(patch):
+    flattened = patch.ravel().astype(np.float32)
+    # Pad to match training size
+    padded = np.pad(flattened, (0, len(pca_mean) - len(flattened)))
+    return (padded - pca_mean) @ pca_components.T
 
-    # Color consistency (mean absolute channel difference)
-    if img1.ndim == 2:
-        c1 = cv2.cvtColor(img1.astype(np.uint8), cv2.COLOR_GRAY2BGR)
-    else:
-        c1 = img1
-    if img2.ndim == 2:
-        c2 = cv2.cvtColor(img2.astype(np.uint8), cv2.COLOR_GRAY2BGR)
-    else:
-        c2 = img2
+# normalized cross-correlation
+def ncc(v1, v2):
+    v1 = np.asarray(v1, dtype=np.float32).ravel()
+    v2 = np.asarray(v2, dtype=np.float32).ravel()
+    
+    if v1.size == 0 or v2.size == 0:
+        return 0.0
+    
+    # Ensure same size
+    size = min(v1.size, v2.size)
+    v1, v2 = v1[:size], v2[:size]
+    
+    mean1, mean2 = np.mean(v1), np.mean(v2)
+    std1, std2 = np.std(v1), np.std(v2)
+    
+    if std1 == 0 or std2 == 0:
+        return 0.0
+    
+    return float(np.clip(np.mean((v1 - mean1) * (v2 - mean2)) / (std1 * std2), -1.0, 1.0))
 
-    c1 = cv2.resize(c1, (w, h)).astype(np.float32)
-    c2 = cv2.resize(c2, (w, h)).astype(np.float32)
-    mad = np.mean(np.abs(c1 - c2)) / 255.0
-    color = float(1.0 - np.clip(mad, 0.0, 1.0))
+# store edge stats 
+def edge_calculations(patch):
+    patch = patch.astype(np.float32)
+    
+    mean = np.mean(patch)
+    std = np.std(patch)
+    histogram = np.histogram(patch.ravel(), bins=32, range=(0, 256))[0].astype(np.float32)
+    
+    gx = filters.sobel(patch, axis=1)
+    gy = filters.sobel(patch, axis=0)
+    grad_mag = np.sqrt(gx**2 + gy**2)
+    grad_strength = np.mean(grad_mag)
+    
+    pca_feature = pca_transform(patch)
+    
+    return {
+        'patch': patch,
+        'mean': mean,
+        'std': std,
+        'histogram': histogram,
+        'grad_strength': grad_strength,
+        'pca_features': pca_feature
+    }
 
-    return 0.55 * ncc + 0.30 * corr + 0.15 * color
 
-# --- Rotations ---
-def generate_rotations(img):
+def compare_metrics(desc1, desc2):
+    # Pixel-level NCC
+    ncc_score = ncc(desc1['patch'], desc2['patch'])
+    
+    # Statistical similarity
+    mean_sim = 1.0 - np.clip(abs(desc1['mean'] - desc2['mean']) / 255.0, 0, 1)
+    
+    # Histogram similarity (chi-squared)
+    h1 = desc1['histogram'] + 1e-5
+    h2 = desc2['histogram'] + 1e-5
+    chi2 = 0.5 * np.sum(((h1 - h2) ** 2) / (h1 + h2))
+    hist_sim = 1.0 / (1.0 + chi2)
+    
+    # Gradient strength similarity
+    grad_sim = 1.0 - np.clip(abs(desc1['grad_strength'] - desc2['grad_strength']) / 255.0, 0, 1)
+    
+    # PCA feature similarity
+    pca_sim = 0.5  # Neutral default
+    if desc1.get('pca_features') is not None and desc2.get('pca_features') is not None:
+        pca_ncc = ncc(desc1['pca_features'], desc2['pca_features'])
+        pca_sim = 0.5 * (pca_ncc + 1.0)  # Normalize to 0-1
+    
+    return {
+        'ncc': ncc_score,
+        'histogram': hist_sim,
+        'pca': pca_sim,
+        'gradient': grad_sim,
+        'mean': mean_sim
+    }
+
+
+def rotate(img):
     return [np.rot90(img, k) for k in range(4)]
 
-# --- Match Pieces ---
-def match_pieces(pieces, candidate_pairs):
+
+def match_pieces(pieces, candidate_pairs, sigma=1.0, epsilon=0.0, use_gradients=False):
+    # Fit PCA on all edge patches
+    all_patches = []
+    for piece in pieces:
+        strips = get_edges_from_piece(piece, strip=30, sigma=sigma, use_gradients=use_gradients)
+        all_patches.extend(strips.values())
+    resize(all_patches)
+    
+    # Match piece pairs
     matches = []
-    seen_pairs = set()
-
-    if not pieces:
-        return matches
-
-    # Build PCA-compressed patch features for each piece rotation.
-    feature_index = []
-    feature_vectors = []
-    for i, piece in enumerate(pieces):
-        for r, rot_img in enumerate(generate_rotations(piece)):
-            gray = _to_grayscale(rot_img)
-            blur = cv2.GaussianBlur(gray, (3, 3), 0)
-            patch = cv2.resize(blur, (28, 28)).astype(np.float32).reshape(-1)
-            feature_index.append((i, r))
-            feature_vectors.append(patch)
-
-    reduced_features, _ = apply_pca(np.asarray(feature_vectors, dtype=np.float64), n_components=24)
-    pca_map = {key: reduced_features[idx] for idx, key in enumerate(feature_index)}
-    
     for i, j in candidate_pairs:
-        if i == j:
-            continue
+        best_match = find_best_match(pieces[i], pieces[j], i, j, sigma, use_gradients)
+        if best_match and best_match[5] > epsilon:
+            matches.append(best_match)
+    
+    matches.sort(key=lambda x: -x[5])  # Sort by score (descending)
+    
+    return matches
 
-        if i < 0 or j < 0 or i >= len(pieces) or j >= len(pieces):
-            continue
 
-        pair = tuple(sorted((i, j)))
-        if pair in seen_pairs:
-            continue
-        seen_pairs.add(pair)
+def find_best_match(piece_i, piece_j, i, j, sigma, use_gradients):
+    """Find best rotation/direction match between two pieces"""
+    best = None
+    best_score = -1.0
+    
+    # Pre-compute all rotations and their edges
+    rotations_i = [(ri, np.rot90(piece_i, ri)) for ri in range(4)]
+    rotations_j = [(rj, np.rot90(piece_j, rj)) for rj in range(4)]
+    
+    strips_i_all = [(ri, get_edges_from_piece(rot_i, strip=30, sigma=sigma, use_gradients=use_gradients)) 
+                    for ri, rot_i in rotations_i]
+    strips_j_all = [(rj, get_edges_from_piece(rot_j, strip=30, sigma=sigma, use_gradients=use_gradients)) 
+                    for rj, rot_j in rotations_j]
+    
+    descs_i_all = [(ri, {k: edge_calculations(v) for k, v in strips.items()}) 
+                   for ri, strips in strips_i_all]
+    descs_j_all = [(rj, {k: edge_calculations(v) for k, v in strips.items()}) 
+                   for rj, strips in strips_j_all]
+    
+    for ri, descs_i in descs_i_all:
+        for rj, descs_j in descs_j_all:
+            # RIGHT→LEFT match
+            metrics = compare_metrics(descs_i["right"], descs_j["left"])
+            score = np.mean([metrics['ncc'], metrics['histogram'], metrics['pca'], metrics['gradient'], metrics['mean']])
+            if score > best_score:
+                best_score = score
+                best = (i, j, "right", ri, rj, score, metrics)
+            
+            # BOTTOM→TOP match
+            metrics = compare_metrics(descs_i["bottom"], descs_j["top"])
+            score = np.mean([metrics['ncc'], metrics['histogram'], metrics['pca'], metrics['gradient'], metrics['mean']])
+            if score > best_score:
+                best_score = score
+                best = (i, j, "bottom", ri, rj, score, metrics)
+    
+    return best
 
-        best_score = -1.0
+
+def reconstruct_grid(matches, num_pieces, rows, cols):
+    # Build match dictionary
+    match_dict = {} 
+    for m in matches:
+        i, j, direction, ri, rj, score = m[:6]
+        key = (i, direction)
+        if key not in match_dict:
+            match_dict[key] = []
+        match_dict[key].append((j, rj, score))
+    
+    # Sort by score
+    for key in match_dict:
+        match_dict[key].sort(key=lambda x: -x[2])
+    
+    # Initialize grid with first piece
+    grid = [[None] * cols for _ in range(rows)]
+    grid[0][0] = (0, 0)
+    used = {0}
+    
+    # Propagate matches through grid
+    changed = True
+    while changed:
+        changed = False
         
-        for ri, r1 in enumerate(generate_rotations(pieces[i])):
-            for rj, r2 in enumerate(generate_rotations(pieces[j])):
-                texture_score = match_texture(r1, r2)
-
-                v1 = pca_map[(i, ri)]
-                v2 = pca_map[(j, rj)]
-                denom = np.linalg.norm(v1) * np.linalg.norm(v2)
-                pca_score = float(np.dot(v1, v2) / denom) if denom != 0 else 0.0
-
-                score = 0.70 * texture_score + 0.30 * pca_score
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] is None:
+                    continue
                 
-                if score > best_score:
-                    best_score = score
-        
-        matches.append((i, j, float(best_score)))
+                piece, rotation = grid[r][c]
+                
+                # Try to fill RIGHT neighbor
+                if c + 1 < cols and grid[r][c+1] is None:
+                    key = (piece, "right")
+                    if key in match_dict:
+                        neighbor, neighbor_rot, _ = match_dict[key][0]
+                        if neighbor not in used:
+                            grid[r][c+1] = (neighbor, neighbor_rot)
+                            used.add(neighbor)
+                            changed = True
+                
+                # Try to fill BOTTOM neighbor
+                if r + 1 < rows and grid[r+1][c] is None:
+                    key = (piece, "bottom")
+                    if key in match_dict:
+                        neighbor, neighbor_rot, _ = match_dict[key][0]
+                        if neighbor not in used:
+                            grid[r+1][c] = (neighbor, neighbor_rot)
+                            used.add(neighbor)
+                            changed = True
     
-    return sorted(matches, key=lambda x: -x[2])
-
-# --- Assembly ---
-def assemble(matches):
-    used = set()
-    assembly = []
+    # Fill remaining cells with unused pieces
+    remaining = [p for p in range(num_pieces) if p not in used]
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] is None and remaining:
+                grid[r][c] = (remaining.pop(0), 0)
     
-    for i, j, score in matches:
-        if i not in used and j not in used:
-            assembly.append((i, j))
-            used.add(i)
-            used.add(j)
-    
-    return assembly
-
-# --- Reconstruction Accuracy ---
-def reconstruction_accuracy(pred_positions, gt_positions):
-    if not gt_positions:
-        return 0.0
-
-    correct = sum(
-        1
-        for i in gt_positions
-        if i in pred_positions and pred_positions[i] == gt_positions[i]
-    )
-    return correct / len(gt_positions)
+    return grid

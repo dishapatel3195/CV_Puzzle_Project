@@ -1,15 +1,22 @@
-import cv2
+from skimage import io
 import numpy as np
 import os
 import random
+import shutil
 
 def split_grid(image_path, rows, cols, output_folder):
-    img = cv2.imread(image_path)
+    # start fresh folders
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
+    
+    # read in the files and split into pieces
+    img = io.imread(image_path)
     h, w, _ = img.shape
     
-    piece_h = h // rows
-    piece_w = w // cols
-    
+    piece_height = h // rows
+    piece_width = w // cols
+
+    # save pieces pieces into a output folder of pieces
     os.makedirs(output_folder, exist_ok=True)
     
     pieces = []
@@ -17,8 +24,13 @@ def split_grid(image_path, rows, cols, output_folder):
     
     for i in range(rows):
         for j in range(cols):
-            piece = img[i*piece_h:(i+1)*piece_h, j*piece_w:(j+1)*piece_w]
-            cv2.imwrite(f"{output_folder}/{count}.png", piece)
+            piece = img[i * piece_height:(i + 1) * piece_height, j * piece_width:(j + 1) * piece_width]
+
+            # randomly rotate pieces (0, 90, 180, 270)
+            rotation = random.randint(0, 3)
+            piece = np.rot90(piece, rotation)
+            
+            io.imsave(f"{output_folder}/{count}.png", piece)
             pieces.append(piece)
             count += 1
     
@@ -27,15 +39,15 @@ def split_grid(image_path, rows, cols, output_folder):
 
 img = "brutus_truth.png"
 output_folder = "brutus_puzzle_pieces"
-rows, cols = 4, 4
-split_grid(img, rows, cols, output_folder)
+rowsb, colsb = 3, 3
+split_grid(img, rowsb, colsb, output_folder)
 
 img2 = "japan_truth.png"
 output_folder = "japan_puzzle_pieces"
-rows, cols = 4, 4
-split_grid(img2, rows, cols, output_folder)
+rowsj, colsj = 3, 3
+split_grid(img2, rowsj, colsj, output_folder)
 
 img2 = "cookies_truth.png"
 output_folder = "cookies_puzzle_pieces"
-rows, cols = 4, 4
-split_grid(img2, rows, cols, output_folder)
+rowsc, colsc = 2, 2
+split_grid(img2, rowsc, colsc, output_folder)

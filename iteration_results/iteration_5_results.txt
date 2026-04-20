@@ -1,0 +1,114 @@
+ITERATION 5: sigma=1.5, epsilon=0.5
+Gradient Map: {'brutus': True, 'japan': True, 'cookies': True}
+
+Processing: brutus_puzzle_pieces
+Parameters: sigma=1.5, epsilon=0.5, gradients=True
+  Merging with 82 previous matches...
+  Total unique matches after merge: 88
+
+Top Matches:
+5 → 2 (right) | rot_i=2, rot_j=1 | 0.7915
+  Metrics - NCC: 0.9585, Hist: 0.0009, PCA: 0.9985, Grad: 0.9998, Mean: 0.9998
+2 → 5 (right) | rot_i=3, rot_j=0 | 0.7913
+  Metrics - NCC: 0.9585, Hist: 0.0009, PCA: 0.9976, Grad: 0.9998, Mean: 0.9998
+5 → 2 (bottom) | rot_i=1, rot_j=0 | 0.7875
+  Metrics - NCC: 0.9399, Hist: 0.0007, PCA: 0.9982, Grad: 0.9986, Mean: 1.0000
+5 → 8 (bottom) | rot_i=3, rot_j=3 | 0.7779
+  Metrics - NCC: 0.8965, Hist: 0.0003, PCA: 0.9941, Grad: 0.9989, Mean: 0.9999
+8 → 5 (right) | rot_i=2, rot_j=2 | 0.7774
+  Metrics - NCC: 0.8965, Hist: 0.0003, PCA: 0.9914, Grad: 0.9989, Mean: 0.9999
+6 → 3 (bottom) | rot_i=1, rot_j=0 | 0.7768
+  Metrics - NCC: 0.8877, Hist: 0.0010, PCA: 0.9965, Grad: 0.9990, Mean: 0.9999
+3 → 0 (right) | rot_i=1, rot_j=1 | 0.7765
+  Metrics - NCC: 0.8854, Hist: 0.0008, PCA: 0.9968, Grad: 0.9994, Mean: 1.0000
+4 → 3 (right) | rot_i=0, rot_j=0 | 0.7764
+  Metrics - NCC: 0.8861, Hist: 0.0009, PCA: 0.9996, Grad: 0.9957, Mean: 1.0000
+3 → 4 (right) | rot_i=2, rot_j=2 | 0.7764
+  Metrics - NCC: 0.8861, Hist: 0.0009, PCA: 0.9992, Grad: 0.9957, Mean: 1.0000
+0 → 3 (bottom) | rot_i=2, rot_j=2 | 0.7761
+  Metrics - NCC: 0.8854, Hist: 0.0008, PCA: 0.9950, Grad: 0.9994, Mean: 1.0000
+
+============================================================
+BRUTUS - Iteration 5 Validation
+============================================================
+MSE (lower is better):              6471.10
+Correlation (higher is better):     0.2800
+Histogram Match (higher is better): 0.8788
+Edge Match Accuracy (higher is better): 91.67%
+Piece Placement Accuracy (higher is better): 0.00%
+
+Saved: reconstructed_brutus_iter5.png
+Processing: japan_puzzle_pieces
+Parameters: sigma=1.5, epsilon=0.5, gradients=True
+  Merging with 92 previous matches...
+  Total unique matches after merge: 92
+
+Top Matches:
+5 → 4 (bottom) | rot_i=1, rot_j=2 | 0.7471
+  Metrics - NCC: 0.7386, Hist: 0.0002, PCA: 0.9974, Grad: 0.9992, Mean: 0.9999
+4 → 5 (bottom) | rot_i=0, rot_j=3 | 0.7467
+  Metrics - NCC: 0.7386, Hist: 0.0002, PCA: 0.9954, Grad: 0.9992, Mean: 0.9999
+1 → 4 (bottom) | rot_i=1, rot_j=1 | 0.7395
+  Metrics - NCC: 0.7026, Hist: 0.0002, PCA: 0.9974, Grad: 0.9979, Mean: 0.9995
+4 → 1 (bottom) | rot_i=3, rot_j=3 | 0.7392
+  Metrics - NCC: 0.7026, Hist: 0.0002, PCA: 0.9956, Grad: 0.9979, Mean: 0.9995
+4 → 5 (right) | rot_i=1, rot_j=0 | 0.7258
+  Metrics - NCC: 0.6383, Hist: 0.0006, PCA: 0.9909, Grad: 0.9997, Mean: 0.9993
+5 → 8 (bottom) | rot_i=0, rot_j=2 | 0.7229
+  Metrics - NCC: 0.6290, Hist: 0.0001, PCA: 0.9910, Grad: 0.9944, Mean: 0.9998
+5 → 2 (bottom) | rot_i=2, rot_j=1 | 0.7226
+  Metrics - NCC: 0.6235, Hist: 0.0003, PCA: 0.9932, Grad: 0.9962, Mean: 1.0000
+2 → 5 (right) | rot_i=0, rot_j=1 | 0.7225
+  Metrics - NCC: 0.6235, Hist: 0.0003, PCA: 0.9925, Grad: 0.9962, Mean: 1.0000
+8 → 5 (bottom) | rot_i=0, rot_j=2 | 0.7214
+  Metrics - NCC: 0.6290, Hist: 0.0001, PCA: 0.9835, Grad: 0.9944, Mean: 0.9998
+3 → 0 (bottom) | rot_i=3, rot_j=1 | 0.7185
+  Metrics - NCC: 0.6029, Hist: 0.0002, PCA: 0.9965, Grad: 0.9935, Mean: 0.9994
+
+============================================================
+JAPAN - Iteration 5 Validation
+============================================================
+MSE (lower is better):              4699.86
+Correlation (higher is better):     0.3751
+Histogram Match (higher is better): 0.9940
+Edge Match Accuracy (higher is better): 41.67%
+Piece Placement Accuracy (higher is better): 22.22%
+
+Saved: reconstructed_japan_iter5.png
+Processing: cookies_puzzle_pieces
+Parameters: sigma=1.5, epsilon=0.5, gradients=True
+  Merging with 73 previous matches...
+  Total unique matches after merge: 93
+
+Top Matches:
+5 → 8 (right) | rot_i=3, rot_j=2 | 0.7551
+  Metrics - NCC: 0.7930, Hist: 0.0020, PCA: 0.9861, Grad: 0.9945, Mean: 1.0000
+8 → 5 (right) | rot_i=0, rot_j=1 | 0.7532
+  Metrics - NCC: 0.7930, Hist: 0.0020, PCA: 0.9767, Grad: 0.9945, Mean: 1.0000
+8 → 5 (bottom) | rot_i=3, rot_j=0 | 0.7444
+  Metrics - NCC: 0.7659, Hist: 0.0027, PCA: 0.9574, Grad: 0.9960, Mean: 1.0000
+8 → 7 (bottom) | rot_i=0, rot_j=2 | 0.7402
+  Metrics - NCC: 0.7308, Hist: 0.0007, PCA: 0.9739, Grad: 0.9957, Mean: 0.9999
+8 → 4 (bottom) | rot_i=0, rot_j=1 | 0.7375
+  Metrics - NCC: 0.7415, Hist: 0.0003, PCA: 0.9520, Grad: 0.9937, Mean: 0.9998
+7 → 8 (right) | rot_i=1, rot_j=3 | 0.7367
+  Metrics - NCC: 0.7308, Hist: 0.0007, PCA: 0.9566, Grad: 0.9957, Mean: 0.9999
+4 → 8 (right) | rot_i=0, rot_j=3 | 0.7325
+  Metrics - NCC: 0.7415, Hist: 0.0003, PCA: 0.9271, Grad: 0.9937, Mean: 0.9998
+0 → 8 (right) | rot_i=1, rot_j=3 | 0.7214
+  Metrics - NCC: 0.6432, Hist: 0.0002, PCA: 0.9661, Grad: 0.9985, Mean: 0.9992
+8 → 0 (right) | rot_i=1, rot_j=3 | 0.7154
+  Metrics - NCC: 0.6432, Hist: 0.0002, PCA: 0.9359, Grad: 0.9985, Mean: 0.9992
+4 → 1 (right) | rot_i=0, rot_j=1 | 0.7114
+  Metrics - NCC: 0.5959, Hist: 0.0008, PCA: 0.9684, Grad: 0.9921, Mean: 1.0000
+
+============================================================
+COOKIES - Iteration 5 Validation
+============================================================
+MSE (lower is better):              8204.93
+Correlation (higher is better):     0.1267
+Histogram Match (higher is better): 1.0000
+Edge Match Accuracy (higher is better): 25.00%
+Piece Placement Accuracy (higher is better): 0.00%
+
+Saved: reconstructed_cookies_iter5.png
