@@ -2,6 +2,7 @@ import numpy as np
 from skimage import io
 from skimage import feature
 from skimage.color import rgb2gray
+from scipy.ndimage import gaussian_filter
 from scipy import ndimage
 
 
@@ -46,51 +47,60 @@ def generate_candidates(num_pieces):
     return pairs
 
 
-def get_edges_from_piece(img, strip=30, sigma=1.0, use_gradients=False):
-
-    from scipy.ndimage import gaussian_filter
-    
+def get_edges_from_piece(img, strip=30, sigma=1.0, logger=None, verbose=False):    
     h, w = img.shape[:2]
     
-    # Convert to grayscale if needed
-    if len(img.shape) == 3:
-        gray = np.mean(img, axis=2).astype(np.uint8)
+    if isinstance(img, str):
+        gray = preprocess(img)
     else:
-        gray = img.astype(np.uint8)
+        if len(img.shape) == 3:
+            gray = np.mean(img, axis=2).astype(np.uint8)
+        else:
+            gray = img.astype(np.uint8)
     
-    # Apply Gaussian blur with adjustable sigma for noise reduction
+    # apply Gaussian blur with adjustable sigma for noise reduction
     blurred = gaussian_filter(gray.astype(np.float32), sigma=sigma)
     
-    if use_gradients:
-        # Use Sobel gradients for edge detection
-        gx = ndimage.sobel(blurred, axis=1)
-        gy = ndimage.sobel(blurred, axis=0)
-        magnitude = np.sqrt(gx**2 + gy**2)
-        # Normalize to 0-1
-        magnitude = (magnitude - magnitude.min()) / (magnitude.max() - magnitude.min() + 1e-5)
-        # Blend with blurred image
-        blurred = 0.6 * blurred / 255.0 + 0.4 * magnitude
-    else:
-        blurred = blurred / 255.0
+    # use Sobel gradients for edge detection
+    gx = ndimage.sobel(blurred, axis=1)
+    gy = ndimage.sobel(blurred, axis=0)
+    magnitude = np.sqrt(gx**2 + gy**2)
     
-    # Convert to 0-255 range
+    # normalize to 0-1
+    magnitude = (magnitude - magnitude.min()) / (magnitude.max() - magnitude.min() + 1e-5)
+    blurred = blurred / 255.0 * magnitude
+    
+    # convert to 0-255 range
     blurred = (blurred * 255).astype(np.uint8)
     
-    # Extract edge strips
-    return {
-        "top": enhance_contrast(blurred[0:strip, :]),
-        "bottom": enhance_contrast(blurred[h-strip:h, :]),
-        "left": enhance_contrast(blurred[:, 0:strip]),
-        "right": enhance_contrast(blurred[:, w-strip:w]),
+    # Only log detailed statistics if verbose mode is enabled
+    if verbose and logger:
+        log_func = logger.log if hasattr(logger, 'log') else print
+        log_func(f"Sobel Gradients:")
+        log_func(f"  Gx range: [{gx.min():.2f}, {gx.max():.2f}], mean: {gx.mean():.2f}")
+        log_func(f"  Gy range: [{gy.min():.2f}, {gy.max():.2f}], mean: {gy.mean():.2f}")
+        log_func(f"  Magnitude range: [{magnitude.min():.2f}, {magnitude.max():.2f}], mean: {magnitude.mean():.2f}")
+        log_func(f"  Edge Strip Statistics (strip_width={strip}):")
+        log_func(f"    Image size: {h}×{w}")
+        log_func(f"    Blurred value range: [{blurred.min()}, {blurred.max()}], mean: {blurred.mean():.2f}")
+        
+        edge_strips = {
+            "top": blurred[0:strip, :],
+            "bottom": blurred[h-strip:h, :],
+            "left": blurred[:, 0:strip],
+            "right": blurred[:, w-strip:w],
+        }
+        
+        for direction, strip_data in edge_strips.items():
+            log_func(f"      {direction.upper():6} strip: shape={strip_data.shape}, mean={strip_data.mean():.2f}, std={strip_data.std():.2f}")
+        
+        return edge_strips
+    
+    edge_strips = {
+        "top": blurred[0:strip, :],
+        "bottom": blurred[h-strip:h, :],
+        "left": blurred[:, 0:strip],
+        "right": blurred[:, w-strip:w],
     }
-
-
-def enhance_contrast(patch):
-    """Enhance local contrast in a patch"""
-    patch_float = patch.astype(np.float32)
-    mean = patch_float.mean()
-    std = patch_float.std()
-    if std > 0:
-        patch_float = (patch_float - mean) / std * 30 + 128
-        patch_float = np.clip(patch_float, 0, 255)
-    return patch_float.astype(np.uint8)
+    
+    return edge_strips

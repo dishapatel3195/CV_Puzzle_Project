@@ -1,9 +1,7 @@
-import io
 import warnings
 import numpy as np
-from skimage import io as skio, transform, metrics
+from skimage import io, transform, metrics
 
-# Suppress numpy runtime warnings from correlation calculations
 warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 def compute_edge_matching_accuracy(grid, pieces, truth):
@@ -81,8 +79,7 @@ def compute_piece_placement_accuracy(reconstructed, truth, grid, pieces):
     return piece_placement_accuracy
 
 def validate_reconstruction(reconstructed, truth_image_path, grid=None, pieces=None, puzzle_name=None, iteration=None, logger=None):
-    """Validate reconstruction and optionally log results"""
-    truth = skio.imread(truth_image_path)
+    truth = io.imread(truth_image_path)
 
     # Resize if needed to match
     if reconstructed.shape != truth.shape:
@@ -128,13 +125,12 @@ def validate_reconstruction(reconstructed, truth_image_path, grid=None, pieces=N
     # Log results if puzzle_name, iteration, and logger provided
     if puzzle_name and iteration and logger:
         log = logger.log if hasattr(logger, 'log') else print
-        log(f"\n{'='*60}")
         log(f"{puzzle_name.upper()} - Iteration {iteration} Validation")
-        log(f"{'='*60}")
-        log(f"MSE (lower is better):              {mse:.2f}")
-        log(f"Correlation (higher is better):     {correlation:.4f}")
-        log(f"Histogram Match (higher is better): {avg_hist_score:.4f}")
-        log(f"Edge Match Accuracy (higher is better): {edge_match_accuracy:.2%}")
-        log(f"Piece Placement Accuracy (higher is better): {piece_placement_accuracy:.2%}")
-    
+        log(f"\n")
+        log(f"MSE:              {mse:.2f}")
+        log(f"Correlation:     {correlation:.4f}")
+        log(f"Histogram Match: {avg_hist_score:.4f}")
+        log(f"\n\nEdge Match Accuracy Ratio: {edge_match_accuracy:.2%}")
+        log(f"Piece Placement Accuracy Ratio: {piece_placement_accuracy:.2%}")
+
     return results

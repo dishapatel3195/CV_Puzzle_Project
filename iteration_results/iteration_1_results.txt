@@ -1,108 +1,401 @@
 ITERATION 1: sigma=1.0, epsilon=0.2
-Gradient Map: {'brutus': False, 'japan': False, 'cookies': False}
 
-Processing: brutus_puzzle_pieces
-Parameters: sigma=1.0, epsilon=0.2, gradients=False
+Image: brutus_puzzle_pieces
+Parameters: sigma=1.0, epsilon=0.2
+Sobel Gradients:
+  Gx range: [-106.34, 205.03], mean: 0.98
+  Gy range: [-110.11, 146.31], mean: 0.31
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 426×640
+    Blurred value range: [0, 160], mean: 3.35
+      TOP    strip: shape=(30, 640), mean=2.73, std=2.73
+      BOTTOM strip: shape=(30, 640), mean=7.99, std=14.99
+      LEFT   strip: shape=(426, 30), mean=1.22, std=1.49
+      RIGHT  strip: shape=(426, 30), mean=12.71, std=17.25
+Sobel Gradients:
+  Gx range: [-464.64, 357.90], mean: -0.39
+  Gy range: [-381.99, 425.88], mean: -0.37
+  Magnitude range: [0.00, 1.00], mean: 0.07
+  Edge Strip Statistics (strip_width=30):
+    Image size: 640×426
+    Blurred value range: [0, 156], mean: 10.56
+      TOP    strip: shape=(30, 426), mean=6.39, std=7.90
+      BOTTOM strip: shape=(30, 426), mean=5.17, std=9.68
+      LEFT   strip: shape=(640, 30), mean=16.22, std=14.98
+      RIGHT  strip: shape=(640, 30), mean=1.88, std=2.15
+Sobel Gradients:
+  Gx range: [-143.40, 242.15], mean: -0.42
+  Gy range: [-99.62, 225.50], mean: 0.25
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 640×426
+    Blurred value range: [0, 139], mean: 3.32
+      TOP    strip: shape=(30, 426), mean=1.55, std=1.36
+      BOTTOM strip: shape=(30, 426), mean=7.63, std=15.03
+      LEFT   strip: shape=(640, 30), mean=3.15, std=2.85
+      RIGHT  strip: shape=(640, 30), mean=3.27, std=4.23
+Sobel Gradients:
+  Gx range: [-222.13, 185.23], mean: -0.38
+  Gy range: [-189.25, 225.08], mean: 0.73
+  Magnitude range: [0.00, 1.00], mean: 0.05
+  Edge Strip Statistics (strip_width=30):
+    Image size: 426×640
+    Blurred value range: [0, 158], mean: 5.03
+      TOP    strip: shape=(30, 640), mean=1.63, std=1.59
+      BOTTOM strip: shape=(30, 640), mean=7.97, std=14.39
+      LEFT   strip: shape=(426, 30), mean=10.83, std=20.33
+      RIGHT  strip: shape=(426, 30), mean=3.68, std=3.19
+Sobel Gradients:
+  Gx range: [-311.87, 432.80], mean: -0.08
+  Gy range: [-375.00, 291.31], mean: -2.25
+  Magnitude range: [0.00, 1.00], mean: 0.04
+  Edge Strip Statistics (strip_width=30):
+    Image size: 426×640
+    Blurred value range: [0, 152], mean: 3.96
+      TOP    strip: shape=(30, 640), mean=10.61, std=11.61
+      BOTTOM strip: shape=(30, 640), mean=1.79, std=7.15
+      LEFT   strip: shape=(426, 30), mean=5.28, std=10.23
+      RIGHT  strip: shape=(426, 30), mean=3.00, std=7.37
+Sobel Gradients:
+  Gx range: [-351.89, 288.31], mean: -0.02
+  Gy range: [-217.15, 201.05], mean: -0.91
+  Magnitude range: [0.00, 1.00], mean: 0.02
+  Edge Strip Statistics (strip_width=30):
+    Image size: 426×640
+    Blurred value range: [0, 151], mean: 1.38
+      TOP    strip: shape=(30, 640), mean=2.19, std=3.49
+      BOTTOM strip: shape=(30, 640), mean=0.36, std=0.93
+      LEFT   strip: shape=(426, 30), mean=4.08, std=8.37
+      RIGHT  strip: shape=(426, 30), mean=0.29, std=0.55
+Sobel Gradients:
+  Gx range: [-33.84, 64.77], mean: 0.25
+  Gy range: [-23.39, 45.86], mean: 0.51
+  Magnitude range: [0.00, 1.00], mean: 0.09
+  Edge Strip Statistics (strip_width=30):
+    Image size: 426×640
+    Blurred value range: [0, 121], mean: 9.45
+      TOP    strip: shape=(30, 640), mean=6.56, std=5.96
+      BOTTOM strip: shape=(30, 640), mean=15.22, std=14.38
+      LEFT   strip: shape=(426, 30), mean=4.84, std=4.70
+      RIGHT  strip: shape=(426, 30), mean=11.12, std=14.56
+Sobel Gradients:
+  Gx range: [-367.05, 302.55], mean: 1.26
+  Gy range: [-460.70, 349.24], mean: 0.30
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 640×426
+    Blurred value range: [0, 162], mean: 3.20
+      TOP    strip: shape=(30, 426), mean=1.57, std=6.56
+      BOTTOM strip: shape=(30, 426), mean=5.13, std=12.63
+      LEFT   strip: shape=(640, 30), mean=1.15, std=5.90
+      RIGHT  strip: shape=(640, 30), mean=5.57, std=14.38
+Sobel Gradients:
+  Gx range: [-206.05, 57.32], mean: -0.33
+  Gy range: [-105.41, 205.92], mean: 0.26
+  Magnitude range: [0.00, 1.00], mean: 0.02
+  Edge Strip Statistics (strip_width=30):
+    Image size: 640×426
+    Blurred value range: [0, 83], mean: 1.23
+      TOP    strip: shape=(30, 426), mean=4.12, std=9.22
+      BOTTOM strip: shape=(30, 426), mean=1.94, std=2.81
+      LEFT   strip: shape=(640, 30), mean=1.90, std=2.32
+      RIGHT  strip: shape=(640, 30), mean=0.92, std=1.97
 
-Top Matches:
-5 → 2 (right) | rot_i=2, rot_j=1 | 0.7908
-  Metrics - NCC: 0.9554, Hist: 0.0008, PCA: 0.9985, Grad: 0.9996, Mean: 0.9998
-2 → 5 (right) | rot_i=3, rot_j=0 | 0.7907
-  Metrics - NCC: 0.9554, Hist: 0.0008, PCA: 0.9977, Grad: 0.9996, Mean: 0.9998
-5 → 8 (bottom) | rot_i=3, rot_j=3 | 0.7777
-  Metrics - NCC: 0.8952, Hist: 0.0003, PCA: 0.9944, Grad: 0.9989, Mean: 0.9998
-8 → 5 (right) | rot_i=2, rot_j=2 | 0.7771
-  Metrics - NCC: 0.8952, Hist: 0.0003, PCA: 0.9913, Grad: 0.9989, Mean: 0.9998
-6 → 3 (bottom) | rot_i=1, rot_j=0 | 0.7767
-  Metrics - NCC: 0.8871, Hist: 0.0010, PCA: 0.9967, Grad: 0.9990, Mean: 0.9996
-3 → 6 (right) | rot_i=3, rot_j=0 | 0.7758
-  Metrics - NCC: 0.8871, Hist: 0.0010, PCA: 0.9924, Grad: 0.9990, Mean: 0.9996
-3 → 0 (right) | rot_i=1, rot_j=1 | 0.7735
-  Metrics - NCC: 0.8710, Hist: 0.0007, PCA: 0.9969, Grad: 0.9990, Mean: 0.9999
-0 → 3 (bottom) | rot_i=2, rot_j=2 | 0.7732
-  Metrics - NCC: 0.8710, Hist: 0.0007, PCA: 0.9951, Grad: 0.9990, Mean: 0.9999
-4 → 5 (bottom) | rot_i=1, rot_j=2 | 0.7726
-  Metrics - NCC: 0.8692, Hist: 0.0003, PCA: 0.9955, Grad: 0.9978, Mean: 1.0000
-5 → 4 (right) | rot_i=1, rot_j=0 | 0.7724
-  Metrics - NCC: 0.8692, Hist: 0.0003, PCA: 0.9946, Grad: 0.9978, Mean: 1.0000
-
-============================================================
+Matches Dictionary:
+3 → 0 (right) | rot_i=1, rot_j=3 | 0.7027
+  METRICS - NCC: 0.4979, Hist: 0.0195, PCA: 0.9963, Grad: 1.0000, Mean: 0.9999
+0 → 3 (right) | rot_i=1, rot_j=3 | 0.7022
+  METRICS - NCC: 0.4979, Hist: 0.0195, PCA: 0.9939, Grad: 1.0000, Mean: 0.9999
+3 → 4 (right) | rot_i=2, rot_j=0 | 0.7016
+  METRICS - NCC: 0.5724, Hist: 0.0021, PCA: 0.9719, Grad: 0.9835, Mean: 0.9782
+8 → 3 (right) | rot_i=1, rot_j=2 | 0.6957
+  METRICS - NCC: 0.5038, Hist: 0.0048, PCA: 0.9784, Grad: 0.9982, Mean: 0.9932
+3 → 8 (right) | rot_i=0, rot_j=3 | 0.6956
+  METRICS - NCC: 0.5038, Hist: 0.0048, PCA: 0.9781, Grad: 0.9982, Mean: 0.9932
+3 → 6 (right) | rot_i=2, rot_j=2 | 0.6955
+  METRICS - NCC: 0.4955, Hist: 0.0026, PCA: 0.9956, Grad: 0.9851, Mean: 0.9988
+8 → 5 (bottom) | rot_i=3, rot_j=2 | 0.6932
+  METRICS - NCC: 0.4497, Hist: 0.0214, PCA: 0.9988, Grad: 0.9984, Mean: 0.9978
+5 → 8 (bottom) | rot_i=0, rot_j=1 | 0.6929
+  METRICS - NCC: 0.4497, Hist: 0.0214, PCA: 0.9975, Grad: 0.9984, Mean: 0.9978
+4 → 3 (bottom) | rot_i=1, rot_j=3 | 0.6866
+  METRICS - NCC: 0.5724, Hist: 0.0021, PCA: 0.8970, Grad: 0.9835, Mean: 0.9782
+6 → 3 (bottom) | rot_i=3, rot_j=3 | 0.6834
+  METRICS - NCC: 0.4955, Hist: 0.0026, PCA: 0.9348, Grad: 0.9851, Mean: 0.9988
 BRUTUS - Iteration 1 Validation
-============================================================
-MSE (lower is better):              4257.38
-Correlation (higher is better):     0.5268
-Histogram Match (higher is better): 0.9009
-Edge Match Accuracy (higher is better): 83.33%
-Piece Placement Accuracy (higher is better): 44.44%
 
-Saved: reconstructed_brutus_iter1.png
-Processing: japan_puzzle_pieces
-Parameters: sigma=1.0, epsilon=0.2, gradients=False
 
-Top Matches:
-5 → 4 (bottom) | rot_i=1, rot_j=2 | 0.7409
-  Metrics - NCC: 0.7076, Hist: 0.0003, PCA: 0.9976, Grad: 0.9992, Mean: 1.0000
-4 → 5 (bottom) | rot_i=0, rot_j=3 | 0.7405
-  Metrics - NCC: 0.7076, Hist: 0.0003, PCA: 0.9956, Grad: 0.9992, Mean: 1.0000
-1 → 4 (bottom) | rot_i=1, rot_j=1 | 0.7369
-  Metrics - NCC: 0.6895, Hist: 0.0002, PCA: 0.9980, Grad: 0.9976, Mean: 0.9992
-4 → 1 (bottom) | rot_i=3, rot_j=3 | 0.7366
-  Metrics - NCC: 0.6895, Hist: 0.0002, PCA: 0.9965, Grad: 0.9976, Mean: 0.9992
-5 → 2 (bottom) | rot_i=2, rot_j=1 | 0.7190
-  Metrics - NCC: 0.6049, Hist: 0.0002, PCA: 0.9942, Grad: 0.9955, Mean: 1.0000
-2 → 5 (right) | rot_i=0, rot_j=1 | 0.7187
-  Metrics - NCC: 0.6049, Hist: 0.0002, PCA: 0.9930, Grad: 0.9955, Mean: 1.0000
-5 → 8 (bottom) | rot_i=0, rot_j=2 | 0.7171
-  Metrics - NCC: 0.6019, Hist: 0.0002, PCA: 0.9923, Grad: 0.9920, Mean: 0.9989
-8 → 5 (right) | rot_i=1, rot_j=3 | 0.7165
-  Metrics - NCC: 0.6019, Hist: 0.0002, PCA: 0.9895, Grad: 0.9920, Mean: 0.9989
-3 → 0 (bottom) | rot_i=3, rot_j=1 | 0.7142
-  Metrics - NCC: 0.5774, Hist: 0.0002, PCA: 0.9947, Grad: 0.9986, Mean: 0.9999
-0 → 3 (bottom) | rot_i=3, rot_j=1 | 0.7141
-  Metrics - NCC: 0.5774, Hist: 0.0002, PCA: 0.9944, Grad: 0.9986, Mean: 0.9999
+MSE:              4873.98
+Correlation:     0.4579
+Histogram Match: 0.8991
 
-============================================================
+
+Edge Match Accuracy Ratio: 75.00%
+Piece Placement Accuracy Ratio: 44.44%
+Image: japan_puzzle_pieces
+Parameters: sigma=1.0, epsilon=0.2
+Sobel Gradients:
+  Gx range: [-278.57, 275.01], mean: -0.02
+  Gy range: [-292.06, 286.97], mean: -0.19
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 1344×896
+    Blurred value range: [0, 102], mean: 0.38
+      TOP    strip: shape=(30, 896), mean=4.15, std=10.28
+      BOTTOM strip: shape=(30, 896), mean=0.00, std=0.04
+      LEFT   strip: shape=(1344, 30), mean=0.01, std=0.07
+      RIGHT  strip: shape=(1344, 30), mean=0.01, std=0.11
+Sobel Gradients:
+  Gx range: [-366.48, 350.21], mean: -0.28
+  Gy range: [-396.39, 363.55], mean: 0.44
+  Magnitude range: [0.00, 1.00], mean: 0.05
+  Edge Strip Statistics (strip_width=30):
+    Image size: 896×1344
+    Blurred value range: [0, 156], mean: 2.58
+      TOP    strip: shape=(30, 1344), mean=1.19, std=4.47
+      BOTTOM strip: shape=(30, 1344), mean=3.62, std=9.64
+      LEFT   strip: shape=(896, 30), mean=2.13, std=4.44
+      RIGHT  strip: shape=(896, 30), mean=0.00, std=0.06
+Sobel Gradients:
+  Gx range: [-307.47, 310.83], mean: 0.46
+  Gy range: [-318.40, 312.17], mean: -0.29
+  Magnitude range: [0.00, 1.00], mean: 0.04
+  Edge Strip Statistics (strip_width=30):
+    Image size: 1344×896
+    Blurred value range: [0, 107], mean: 1.33
+      TOP    strip: shape=(30, 896), mean=6.48, std=14.32
+      BOTTOM strip: shape=(30, 896), mean=0.00, std=0.03
+      LEFT   strip: shape=(1344, 30), mean=0.01, std=0.09
+      RIGHT  strip: shape=(1344, 30), mean=4.41, std=12.15
+Sobel Gradients:
+  Gx range: [-481.36, 415.31], mean: 0.02
+  Gy range: [-465.39, 366.12], mean: -0.08
+  Magnitude range: [0.00, 1.00], mean: 0.05
+  Edge Strip Statistics (strip_width=30):
+    Image size: 896×1344
+    Blurred value range: [0, 158], mean: 3.40
+      TOP    strip: shape=(30, 1344), mean=1.11, std=3.58
+      BOTTOM strip: shape=(30, 1344), mean=1.14, std=3.88
+      LEFT   strip: shape=(896, 30), mean=2.61, std=5.53
+      RIGHT  strip: shape=(896, 30), mean=2.55, std=4.57
+Sobel Gradients:
+  Gx range: [-366.23, 486.67], mean: 0.35
+  Gy range: [-467.84, 438.42], mean: -0.18
+  Magnitude range: [0.00, 1.00], mean: 0.05
+  Edge Strip Statistics (strip_width=30):
+    Image size: 1344×896
+    Blurred value range: [0, 158], mean: 3.51
+      TOP    strip: shape=(30, 896), mean=1.07, std=2.26
+      BOTTOM strip: shape=(30, 896), mean=2.64, std=10.29
+      LEFT   strip: shape=(1344, 30), mean=2.91, std=6.01
+      RIGHT  strip: shape=(1344, 30), mean=3.60, std=8.97
+Sobel Gradients:
+  Gx range: [-387.04, 376.23], mean: 0.50
+  Gy range: [-412.30, 331.95], mean: 0.10
+  Magnitude range: [0.00, 1.00], mean: 0.06
+  Edge Strip Statistics (strip_width=30):
+    Image size: 1344×896
+    Blurred value range: [0, 150], mean: 3.97
+      TOP    strip: shape=(30, 896), mean=2.50, std=5.54
+      BOTTOM strip: shape=(30, 896), mean=3.62, std=7.50
+      LEFT   strip: shape=(1344, 30), mean=0.95, std=4.15
+      RIGHT  strip: shape=(1344, 30), mean=3.91, std=10.05
+Sobel Gradients:
+  Gx range: [-429.23, 412.18], mean: -0.09
+  Gy range: [-471.79, 430.92], mean: 0.05
+  Magnitude range: [0.00, 1.00], mean: 0.04
+  Edge Strip Statistics (strip_width=30):
+    Image size: 896×1344
+    Blurred value range: [0, 164], mean: 2.31
+      TOP    strip: shape=(30, 1344), mean=3.62, std=9.82
+      BOTTOM strip: shape=(30, 1344), mean=1.07, std=5.23
+      LEFT   strip: shape=(896, 30), mean=1.95, std=3.92
+      RIGHT  strip: shape=(896, 30), mean=0.26, std=0.68
+Sobel Gradients:
+  Gx range: [-419.53, 411.00], mean: -0.04
+  Gy range: [-267.65, 250.38], mean: 0.07
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 896×1344
+    Blurred value range: [0, 162], mean: 0.59
+      TOP    strip: shape=(30, 1344), mean=0.28, std=0.90
+      BOTTOM strip: shape=(30, 1344), mean=1.40, std=5.21
+      LEFT   strip: shape=(896, 30), mean=0.53, std=1.02
+      RIGHT  strip: shape=(896, 30), mean=2.04, std=11.39
+Sobel Gradients:
+  Gx range: [-358.45, 455.72], mean: 0.68
+  Gy range: [-388.56, 373.99], mean: -0.04
+  Magnitude range: [0.00, 1.00], mean: 0.04
+  Edge Strip Statistics (strip_width=30):
+    Image size: 1344×896
+    Blurred value range: [0, 132], mean: 1.53
+      TOP    strip: shape=(30, 896), mean=4.50, std=9.32
+      BOTTOM strip: shape=(30, 896), mean=0.56, std=0.79
+      LEFT   strip: shape=(1344, 30), mean=1.44, std=5.26
+      RIGHT  strip: shape=(1344, 30), mean=7.36, std=16.33
+
+Matches Dictionary:
+0 → 2 (bottom) | rot_i=3, rot_j=3 | 0.8018
+  METRICS - NCC: 0.0092, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
+2 → 0 (right) | rot_i=2, rot_j=2 | 0.8018
+  METRICS - NCC: 0.0092, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
+0 → 8 (right) | rot_i=1, rot_j=3 | 0.8018
+  METRICS - NCC: 0.0147, Hist: 1.0000, PCA: 0.9992, Grad: 0.9973, Mean: 0.9978
+8 → 0 (right) | rot_i=1, rot_j=3 | 0.8015
+  METRICS - NCC: 0.0147, Hist: 1.0000, PCA: 0.9977, Grad: 0.9973, Mean: 0.9978
+2 → 8 (right) | rot_i=1, rot_j=3 | 0.8004
+  METRICS - NCC: 0.0079, Hist: 1.0000, PCA: 0.9992, Grad: 0.9973, Mean: 0.9978
+8 → 2 (right) | rot_i=1, rot_j=3 | 0.8001
+  METRICS - NCC: 0.0079, Hist: 1.0000, PCA: 0.9977, Grad: 0.9973, Mean: 0.9978
+1 → 2 (right) | rot_i=0, rot_j=3 | 0.7998
+  METRICS - NCC: -0.0012, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
+2 → 1 (bottom) | rot_i=0, rot_j=1 | 0.7998
+  METRICS - NCC: -0.0012, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
+1 → 0 (right) | rot_i=0, rot_j=3 | 0.7997
+  METRICS - NCC: -0.0014, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
+0 → 1 (bottom) | rot_i=0, rot_j=1 | 0.7997
+  METRICS - NCC: -0.0014, Hist: 1.0000, PCA: 1.0000, Grad: 1.0000, Mean: 1.0000
 JAPAN - Iteration 1 Validation
-============================================================
-MSE (lower is better):              4250.36
-Correlation (higher is better):     0.4352
-Histogram Match (higher is better): 0.9941
-Edge Match Accuracy (higher is better): 50.00%
-Piece Placement Accuracy (higher is better): 22.22%
 
-Saved: reconstructed_japan_iter1.png
-Processing: cookies_puzzle_pieces
-Parameters: sigma=1.0, epsilon=0.2, gradients=False
 
-Top Matches:
-5 → 8 (right) | rot_i=3, rot_j=2 | 0.7441
-  Metrics - NCC: 0.7435, Hist: 0.0027, PCA: 0.9783, Grad: 0.9962, Mean: 1.0000
-8 → 5 (bottom) | rot_i=3, rot_j=0 | 0.7399
-  Metrics - NCC: 0.7435, Hist: 0.0027, PCA: 0.9569, Grad: 0.9962, Mean: 1.0000
-8 → 4 (bottom) | rot_i=0, rot_j=1 | 0.7338
-  Metrics - NCC: 0.7246, Hist: 0.0004, PCA: 0.9523, Grad: 0.9921, Mean: 0.9999
-4 → 8 (right) | rot_i=0, rot_j=3 | 0.7286
-  Metrics - NCC: 0.7246, Hist: 0.0004, PCA: 0.9261, Grad: 0.9921, Mean: 0.9999
-8 → 7 (bottom) | rot_i=0, rot_j=2 | 0.7281
-  Metrics - NCC: 0.7052, Hist: 0.0005, PCA: 0.9355, Grad: 0.9994, Mean: 0.9999
-7 → 8 (right) | rot_i=1, rot_j=3 | 0.7258
-  Metrics - NCC: 0.7052, Hist: 0.0005, PCA: 0.9242, Grad: 0.9994, Mean: 0.9999
-0 → 8 (right) | rot_i=1, rot_j=3 | 0.7096
-  Metrics - NCC: 0.6356, Hist: 0.0001, PCA: 0.9138, Grad: 0.9983, Mean: 1.0000
-8 → 0 (right) | rot_i=1, rot_j=3 | 0.7094
-  Metrics - NCC: 0.6356, Hist: 0.0001, PCA: 0.9129, Grad: 0.9983, Mean: 1.0000
-4 → 1 (right) | rot_i=0, rot_j=1 | 0.7045
-  Metrics - NCC: 0.5624, Hist: 0.0006, PCA: 0.9691, Grad: 0.9903, Mean: 1.0000
-1 → 4 (right) | rot_i=3, rot_j=2 | 0.7008
-  Metrics - NCC: 0.5624, Hist: 0.0006, PCA: 0.9509, Grad: 0.9903, Mean: 1.0000
+MSE:              6547.40
+Correlation:     0.1321
+Histogram Match: 0.9994
 
-============================================================
+
+Edge Match Accuracy Ratio: 58.33%
+Piece Placement Accuracy Ratio: 0.00%
+Image: cookies_puzzle_pieces
+Parameters: sigma=1.0, epsilon=0.2
+Sobel Gradients:
+  Gx range: [-137.60, 204.19], mean: -0.20
+  Gy range: [-122.19, 291.64], mean: 0.30
+  Magnitude range: [0.00, 1.00], mean: 0.03
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 168], mean: 4.91
+      TOP    strip: shape=(30, 400), mean=5.00, std=6.35
+      BOTTOM strip: shape=(30, 400), mean=8.32, std=11.10
+      LEFT   strip: shape=(400, 30), mean=3.15, std=5.04
+      RIGHT  strip: shape=(400, 30), mean=7.77, std=12.57
+Sobel Gradients:
+  Gx range: [-345.67, 380.96], mean: -0.89
+  Gy range: [-283.66, 332.08], mean: 0.48
+  Magnitude range: [0.00, 1.00], mean: 0.07
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 146], mean: 10.50
+      TOP    strip: shape=(30, 400), mean=11.93, std=13.34
+      BOTTOM strip: shape=(30, 400), mean=6.57, std=10.15
+      LEFT   strip: shape=(400, 30), mean=1.42, std=1.77
+      RIGHT  strip: shape=(400, 30), mean=13.67, std=16.54
+Sobel Gradients:
+  Gx range: [-373.58, 394.45], mean: -0.45
+  Gy range: [-420.86, 391.90], mean: 0.12
+  Magnitude range: [0.00, 1.00], mean: 0.09
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 136], mean: 10.21
+      TOP    strip: shape=(30, 400), mean=9.60, std=13.72
+      BOTTOM strip: shape=(30, 400), mean=10.14, std=12.35
+      LEFT   strip: shape=(400, 30), mean=4.55, std=6.53
+      RIGHT  strip: shape=(400, 30), mean=14.43, std=16.54
+Sobel Gradients:
+  Gx range: [-269.26, 225.07], mean: 0.66
+  Gy range: [-262.27, 227.93], mean: 1.32
+  Magnitude range: [0.00, 1.00], mean: 0.12
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 120], mean: 13.75
+      TOP    strip: shape=(30, 400), mean=14.13, std=13.87
+      BOTTOM strip: shape=(30, 400), mean=9.18, std=12.29
+      LEFT   strip: shape=(400, 30), mean=17.86, std=15.78
+      RIGHT  strip: shape=(400, 30), mean=7.97, std=15.48
+Sobel Gradients:
+  Gx range: [-334.17, 388.46], mean: -0.36
+  Gy range: [-357.22, 427.00], mean: 0.56
+  Magnitude range: [0.00, 1.00], mean: 0.11
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 147], mean: 13.32
+      TOP    strip: shape=(30, 400), mean=10.82, std=14.02
+      BOTTOM strip: shape=(30, 400), mean=11.54, std=16.64
+      LEFT   strip: shape=(400, 30), mean=10.25, std=11.43
+      RIGHT  strip: shape=(400, 30), mean=10.95, std=12.51
+Sobel Gradients:
+  Gx range: [-356.73, 378.85], mean: 0.34
+  Gy range: [-370.81, 353.03], mean: -1.54
+  Magnitude range: [0.00, 1.00], mean: 0.12
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 135], mean: 15.29
+      TOP    strip: shape=(30, 400), mean=15.36, std=12.86
+      BOTTOM strip: shape=(30, 400), mean=9.91, std=10.67
+      LEFT   strip: shape=(400, 30), mean=14.26, std=12.20
+      RIGHT  strip: shape=(400, 30), mean=16.60, std=12.97
+Sobel Gradients:
+  Gx range: [-179.12, 254.24], mean: -1.34
+  Gy range: [-213.44, 243.10], mean: 0.69
+  Magnitude range: [0.00, 1.00], mean: 0.10
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 147], mean: 12.11
+      TOP    strip: shape=(30, 400), mean=11.89, std=13.94
+      BOTTOM strip: shape=(30, 400), mean=17.79, std=16.68
+      LEFT   strip: shape=(400, 30), mean=13.93, std=13.67
+      RIGHT  strip: shape=(400, 30), mean=11.28, std=9.52
+Sobel Gradients:
+  Gx range: [-306.57, 366.78], mean: -0.33
+  Gy range: [-231.65, 322.96], mean: 2.01
+  Magnitude range: [0.00, 1.00], mean: 0.08
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 124], mean: 8.67
+      TOP    strip: shape=(30, 400), mean=5.00, std=7.62
+      BOTTOM strip: shape=(30, 400), mean=8.90, std=12.27
+      LEFT   strip: shape=(400, 30), mean=12.73, std=12.99
+      RIGHT  strip: shape=(400, 30), mean=8.00, std=8.94
+Sobel Gradients:
+  Gx range: [-264.35, 323.89], mean: 1.71
+  Gy range: [-356.31, 365.53], mean: 0.07
+  Magnitude range: [0.00, 1.00], mean: 0.09
+  Edge Strip Statistics (strip_width=30):
+    Image size: 400×400
+    Blurred value range: [0, 143], mean: 10.30
+      TOP    strip: shape=(30, 400), mean=6.89, std=11.49
+      BOTTOM strip: shape=(30, 400), mean=13.75, std=13.60
+      LEFT   strip: shape=(400, 30), mean=9.89, std=11.29
+      RIGHT  strip: shape=(400, 30), mean=16.42, std=14.83
+
+Matches Dictionary:
+1 → 0 (bottom) | rot_i=0, rot_j=1 | 0.6736
+  METRICS - NCC: 0.4016, Hist: 0.0072, PCA: 0.9670, Grad: 0.9971, Mean: 0.9953
+0 → 1 (bottom) | rot_i=3, rot_j=2 | 0.6701
+  METRICS - NCC: 0.4016, Hist: 0.0072, PCA: 0.9494, Grad: 0.9971, Mean: 0.9953
+2 → 5 (right) | rot_i=1, rot_j=3 | 0.6534
+  METRICS - NCC: 0.2599, Hist: 0.0233, PCA: 0.9859, Grad: 0.9989, Mean: 0.9991
+8 → 5 (right) | rot_i=2, rot_j=3 | 0.6529
+  METRICS - NCC: 0.2555, Hist: 0.0347, PCA: 0.9745, Grad: 0.9998, Mean: 0.9999
+1 → 2 (right) | rot_i=3, rot_j=3 | 0.6523
+  METRICS - NCC: 0.3093, Hist: 0.0107, PCA: 0.9529, Grad: 0.9958, Mean: 0.9930
+0 → 3 (right) | rot_i=1, rot_j=3 | 0.6511
+  METRICS - NCC: 0.2772, Hist: 0.0200, PCA: 0.9647, Grad: 0.9967, Mean: 0.9966
+5 → 2 (right) | rot_i=1, rot_j=3 | 0.6498
+  METRICS - NCC: 0.2599, Hist: 0.0233, PCA: 0.9680, Grad: 0.9989, Mean: 0.9991
+5 → 8 (bottom) | rot_i=0, rot_j=3 | 0.6495
+  METRICS - NCC: 0.2555, Hist: 0.0347, PCA: 0.9574, Grad: 0.9998, Mean: 0.9999
+2 → 1 (right) | rot_i=1, rot_j=1 | 0.6482
+  METRICS - NCC: 0.3093, Hist: 0.0107, PCA: 0.9322, Grad: 0.9958, Mean: 0.9930
+0 → 8 (bottom) | rot_i=3, rot_j=3 | 0.6461
+  METRICS - NCC: 0.2962, Hist: 0.0030, PCA: 0.9473, Grad: 0.9925, Mean: 0.9917
 COOKIES - Iteration 1 Validation
-============================================================
-MSE (lower is better):              8161.21
-Correlation (higher is better):     0.1313
-Histogram Match (higher is better): 1.0000
-Edge Match Accuracy (higher is better): 41.67%
-Piece Placement Accuracy (higher is better): 0.00%
 
-Saved: reconstructed_cookies_iter1.png
+
+MSE:              6443.89
+Correlation:     0.3141
+Histogram Match: 1.0000
+
+
+Edge Match Accuracy Ratio: 50.00%
+Piece Placement Accuracy Ratio: 22.22%

@@ -35,7 +35,6 @@ def load_pieces(folder):
     return pieces
 
 def build_image(grid, pieces):
-    """Assemble puzzle from grid configuration"""
     rows, cols = len(grid), len(grid[0])
     h, w = pieces[0].shape[:2]
     canvas = np.zeros((rows * h, cols * w, 3), dtype=np.uint8)
@@ -56,7 +55,7 @@ def build_image(grid, pieces):
     
     return canvas
 
-def run_pipeline(folder, rows, cols, sigma=2.0, epsilon=0.5, use_gradients=True, previous_matches=None, iteration=1, logger=None):
+def run_pipeline(folder, rows, cols, sigma=2.0, epsilon=0.5, previous_matches=None, iteration=1, logger=None):
     pieces = load_pieces(folder)
 
     if logger is None:
@@ -64,21 +63,17 @@ def run_pipeline(folder, rows, cols, sigma=2.0, epsilon=0.5, use_gradients=True,
     
     log = logger.log if hasattr(logger, 'log') else print
 
-    log(f"Processing: {folder}")
-    log(f"Parameters: sigma={sigma}, epsilon={epsilon}, gradients={use_gradients}")
+    log(f"Image: {folder}")
+    log(f"Parameters: sigma={sigma}, epsilon={epsilon}")
 
-    # Step 1: Edge extraction (debug/optional)
-    edges_list = [get_edges(p) for p in pieces]
-
-    # Step 2: Candidate pairs
+    # Step 1: Edge extraction & Candidate pairs
     candidate_pairs = generate_candidates(len(pieces))
 
-    # Step 3: Matching with tunable parameters
-    matches = match_pieces(pieces, candidate_pairs, sigma=sigma, epsilon=epsilon, use_gradients=use_gradients)
+    # Step 2: Matching with tunable parameters (always using Sobel edge detection)
+    matches = match_pieces(pieces, candidate_pairs, sigma=sigma, epsilon=epsilon, logger=logger)
 
-    # Step 3b: Merge with previous matches if available (keep better scores)
+    # Step 2b: Merge with previous matches if available (keep better scores)
     if previous_matches:
-        log(f"  Merging with {len(previous_matches)} previous matches...")
         match_dict = {}
         # Add new matches
         for m in matches:
@@ -93,36 +88,31 @@ def run_pipeline(folder, rows, cols, sigma=2.0, epsilon=0.5, use_gradients=True,
             if key not in match_dict or score > match_dict[key][5]:
                 match_dict[key] = m
         matches = sorted(match_dict.values(), key=lambda x: -x[5])
-        log(f"  Total unique matches after merge: {len(matches)}")
 
-    log("\nTop Matches:")
+    log("\nMatches Dictionary:")
     for m in matches[:10]:
         i, j, direction, ri, rj, score = m[:6]
         metrics = m[6] if len(m) > 6 else {}
         if metrics:
             log(f"{i} → {j} ({direction}) | rot_i={ri}, rot_j={rj} | {score:.4f}")
-            log(f"  Metrics - NCC: {metrics['ncc']:.4f}, Hist: {metrics['histogram']:.4f}, " +
+            log(f"  METRICS - NCC: {metrics['ncc']:.4f}, Hist: {metrics['histogram']:.4f}, " +
                 f"PCA: {metrics['pca']:.4f}, Grad: {metrics['gradient']:.4f}, Mean: {metrics['mean']:.4f}")
         else:
             log(f"{i} → {j} ({direction}) | rot_i={ri}, rot_j={rj} | {score:.4f}")
 
-    # Step 4: Grid reconstruction
+    # Step 3: Grid reconstruction
     grid = reconstruct_grid(matches, len(pieces), rows, cols)
-
-    # Step 5: Build final image
     result = build_image(grid, pieces)
-    
-    # Step 6: Validate against ground truth
+
+    # Step 4: validate against ground truth
     puzzle_name = folder.replace("_puzzle_pieces", "")
     truth_path = f"{puzzle_name}_truth.png"
     validation = validate_reconstruction(result, truth_path, grid, pieces, puzzle_name, iteration, logger)
-    
-    # Step 7: Save output image
+
+    # save output image
     puzzle_name = folder.replace("_puzzle_pieces", "")
     output_filename = f"reconstructed_{puzzle_name}_iter{iteration}.png"
     io.imsave(output_filename, result)
-
-    log(f"\nSaved: {output_filename}")
 
     return grid, matches, result, validation
 
@@ -161,34 +151,19 @@ all_images = {
 }
 
 iterations = [
-    # Test 1: Low sigma, low epsilon, no gradients
-    (1.0, 0.2, {"brutus": False, "japan": False, "cookies": False}),
-    
-    # Test 2: Medium sigma, medium epsilon, japan with gradients
-    (2.0, 0.5, {"brutus": False, "japan": True, "cookies": False}),
-    
-    # Test 3: Higher sigma, higher epsilon, all with gradients
-    (3.0, 0.8, {"brutus": True, "japan": True, "cookies": True}),
-    
-    # Test 4: Medium sigma, low epsilon, selective gradients
-    (2.0, 0.3, {"brutus": True, "japan": False, "cookies": False}),
-    
-    # Test 5: Lower sigma, medium epsilon, all with gradients (refinement)
-    (1.5, 0.5, {"brutus": True, "japan": True, "cookies": True}),
+    (1.0, 0.2),
+    (2.0, 0.5),
+    (3.0, 0.8),
+    (2.0, 0.3),
+    (1.5, 0.5),
 ]
 
-for iteration_num, (sigma, epsilon, gradient_map) in enumerate(iterations, 1):
-    # Create logger for this iteration
+for iteration_num, (sigma, epsilon) in enumerate(iterations, 1):
     log_filename = os.path.join(results_dir, f"iteration_{iteration_num}_results.txt")
     logger = Logger(log_filename)
     
     logger.log(f"ITERATION {iteration_num}: sigma={sigma}, epsilon={epsilon}")
-    logger.log(f"Gradient Map: {gradient_map}")
     logger.log("")
-    
-    print("\n" + "="*60)
-    print(f"ITERATION {iteration_num}: sigma={sigma}, epsilon={epsilon}")
-    print("="*60)
     
     puzzles = [
         ("brutus_puzzle_pieces", 3, 3, "brutus"),
@@ -197,8 +172,7 @@ for iteration_num, (sigma, epsilon, gradient_map) in enumerate(iterations, 1):
     ]
     
     for folder, rows, cols, puzzle_name in puzzles:
-        use_grad = gradient_map[puzzle_name]
-        grid, matches, img, val = run_pipeline(folder, rows, cols, sigma=sigma, epsilon=epsilon, use_gradients=use_grad, previous_matches=all_matches[folder], iteration=iteration_num, logger=logger)
+        grid, matches, img, val = run_pipeline(folder, rows, cols, sigma=sigma, epsilon=epsilon, previous_matches=all_matches[folder], iteration=iteration_num, logger=logger)
         all_matches[folder] = matches
         all_images[puzzle_name].append(img)
 

@@ -117,18 +117,18 @@ def rotate(img):
     return [np.rot90(img, k) for k in range(4)]
 
 
-def match_pieces(pieces, candidate_pairs, sigma=1.0, epsilon=0.0, use_gradients=False):
-    # Fit PCA on all edge patches
+def match_pieces(pieces, candidate_pairs, sigma=1.0, epsilon=0.0, logger=None):
+    # Fit PCA on all edge patches (with verbose logging)
     all_patches = []
     for piece in pieces:
-        strips = get_edges_from_piece(piece, strip=30, sigma=sigma, use_gradients=use_gradients)
+        strips = get_edges_from_piece(piece, strip=30, sigma=sigma, logger=logger, verbose=True)
         all_patches.extend(strips.values())
     resize(all_patches)
     
-    # Match piece pairs
+    # Match piece pairs (without verbose logging)
     matches = []
     for i, j in candidate_pairs:
-        best_match = find_best_match(pieces[i], pieces[j], i, j, sigma, use_gradients)
+        best_match = find_best_match(pieces[i], pieces[j], i, j, sigma, logger=logger)
         if best_match and best_match[5] > epsilon:
             matches.append(best_match)
     
@@ -137,7 +137,7 @@ def match_pieces(pieces, candidate_pairs, sigma=1.0, epsilon=0.0, use_gradients=
     return matches
 
 
-def find_best_match(piece_i, piece_j, i, j, sigma, use_gradients):
+def find_best_match(piece_i, piece_j, i, j, sigma, logger=None):
     """Find best rotation/direction match between two pieces"""
     best = None
     best_score = -1.0
@@ -146,9 +146,9 @@ def find_best_match(piece_i, piece_j, i, j, sigma, use_gradients):
     rotations_i = [(ri, np.rot90(piece_i, ri)) for ri in range(4)]
     rotations_j = [(rj, np.rot90(piece_j, rj)) for rj in range(4)]
     
-    strips_i_all = [(ri, get_edges_from_piece(rot_i, strip=30, sigma=sigma, use_gradients=use_gradients)) 
+    strips_i_all = [(ri, get_edges_from_piece(rot_i, strip=30, sigma=sigma, logger=logger)) 
                     for ri, rot_i in rotations_i]
-    strips_j_all = [(rj, get_edges_from_piece(rot_j, strip=30, sigma=sigma, use_gradients=use_gradients)) 
+    strips_j_all = [(rj, get_edges_from_piece(rot_j, strip=30, sigma=sigma, logger=logger)) 
                     for rj, rot_j in rotations_j]
     
     descs_i_all = [(ri, {k: edge_calculations(v) for k, v in strips.items()}) 
