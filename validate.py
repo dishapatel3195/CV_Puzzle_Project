@@ -4,6 +4,7 @@ from skimage import io, transform, metrics
 
 warnings.filterwarnings('ignore', category=RuntimeWarning)
 
+# ratio of correctly matched edges to total possible edges
 def compute_edge_matching_accuracy(grid, pieces, truth):
     rows, cols = len(grid), len(grid[0])
     total_possible_edges = (rows - 1) * cols + rows * (cols - 1)
@@ -11,16 +12,19 @@ def compute_edge_matching_accuracy(grid, pieces, truth):
     
     piece_size = pieces[0].shape[0]
     
+    # iterate through the grid
     for r in range(rows):
         for c in range(cols):
             piece_id, rotation = grid[r][c]
             
+            # look at bottom neighbor and right neighbor
             if c + 1 < cols:
                 neighbor_id, neighbor_rot = grid[r][c + 1]
                 right_edge = np.rot90(pieces[piece_id], rotation)[-piece_size//4:, :]
                 left_edge = np.rot90(pieces[neighbor_id], neighbor_rot)[:, :piece_size//4]
                 
                 if right_edge.size > 0 and left_edge.size > 0:
+                    # flatten
                     right_flat = right_edge.ravel()[:100]
                     left_flat = left_edge.ravel()[:100]
                     if len(right_flat) > 1 and len(left_flat) > 1 and np.std(right_flat) > 0 and np.std(left_flat) > 0:
@@ -41,8 +45,10 @@ def compute_edge_matching_accuracy(grid, pieces, truth):
                         if not np.isnan(edge_corr) and edge_corr > 0.5:
                             correct_matches += 1
     
+    # ratio
     edge_match_accuracy = correct_matches / max(total_possible_edges, 1)
     return edge_match_accuracy
+
 
 # ratio of correctly placed pieces to total pieces
 def compute_piece_placement_accuracy(reconstructed, truth, grid, pieces):
