@@ -8,8 +8,12 @@ from scipy import ndimage
 
 # grayscale image
 def preprocess(img):
-    img_array = io.imread(img)
-
+    # Handle both file paths (strings) and numpy arrays
+    if isinstance(img, str):
+        img_array = io.imread(img)
+    else:
+        img_array = img
+    
     gray = rgb2gray(img_array)
     gray = (gray * 255).astype(np.uint8)
 

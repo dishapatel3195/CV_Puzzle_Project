@@ -32,7 +32,7 @@ def load_pieces(folder):
                 pieces.append(img)
     return pieces
 
-# connects the pieces together 
+# connects the pieces together for reconstruction
 def build_image(grid, pieces):
     rows, cols = len(grid), len(grid[0])
     h, w = pieces[0].shape[:2]
